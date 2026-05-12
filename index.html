@@ -22,8 +22,11 @@
         
         #error-msg { color: #ff4d4d; font-size: 12px; margin-top: 10px; display: none; font-weight: bold; }
         
-        #staff-box { display: none; margin-top: 20px; }
-        .staff-title { color: #ffcc00; font-size: 14px; font-weight: bold; letter-spacing: 2px; margin-bottom: 15px; }
+        /* Pannelli Interni Nascosti */
+        #staff-box, #ospite-box { display: none; margin-top: 20px; }
+        .staff-title { color: #ffcc00; font-size: 14px; font-weight: bold; letter-spacing: 2px; margin-bottom: 5px; }
+        .ospite-title { color: #4285F4; font-size: 14px; font-weight: bold; letter-spacing: 2px; margin-bottom: 15px; }
+        .welcome-user { font-size: 18px; font-weight: bold; color: white; margin-bottom: 15px; }
     </style>
 </head>
 <body onload="setGreeting()">
@@ -32,25 +35,32 @@
     <img src="https://i.ibb.co/5Xd8CvF4/LOGO-ROUTER.png" class="logo-avb" alt="Logo AVB">
     <div id="greeting" class="greeting-text">BENVENUTO</div>
     <h1>Agenzia Viaggiare Bene</h1>
-    <p class="subtitle">Viaggiare Insieme, Viaggiare Bene.</p>
+    <p class="subtitle">Viaggiare Insieme, Viaggiare Bene</p>
 
-    <!-- Box Principale di Accesso -->
+    <!-- Box Iniziale di Login -->
     <div id="login-box">
         <input type="email" id="emailInput" placeholder="Inserisci la tua email" required>
         <div id="error-msg"></div>
         <button type="button" class="btn-submit" onclick="validateAndConnect()">CONNETTITI ORA</button>
     </div>
 
-    <!-- Contenitore Animazione Barra Blu -->
+    <!-- Contenitore Animazione Caricamento -->
     <div id="loader-container"><div id="loader-bar"></div></div>
-    <p id="status-text">Verifica identità in corso...</p>
+    <p id="status-text">Verifica in corso...</p>
 
-    <!-- Box Segreto dello Staff (Appare solo a te) -->
+    <!-- 1. PANNELLO SEGRETO STAFF (Oro) -->
     <div id="staff-box">
         <div class="staff-title">🔒 AREA STAFF AUTORIZZATA</div>
+        <div id="staff-welcome" class="welcome-user">Ciao, Utente!</div>
         <p class="subtitle" style="margin-bottom: 15px;">Accesso eseguito come Amministratore.</p>
-        <!-- Puoi cambiare il link dentro le virgolette qui sotto quando vuoi -->
         <a href="https://agenzia-viaggiare-bene.my.canva.site/area-staff" class="btn-link">APRI PANNELLO DI CONTROLLO</a>
+    </div>
+
+    <!-- 2. PANNELLO CLIENTE OSPITE (Azzurro) -->
+    <div id="ospite-box">
+        <div class="ospite-title">👤 AREA OSPITE ABILITATA</div>
+        <p class="subtitle" style="margin-bottom: 15px;">Accesso eseguito come ospite.</p>
+        <a href="https://agenzia-viaggiare-bene.my.canva.site/avbviaggi" class="btn-link">ENTRA NEL SITO DEI VIAGGI</a>
     </div>
 </center>
 
@@ -76,7 +86,7 @@
         const email = document.getElementById('emailInput').value.toLowerCase().trim();
         const errorMsg = document.getElementById('error-msg');
         
-        const staffEmails = [
+        const fixedStaff = [
             "agenzia.viaggiare.bene@gmail.com",
             "agenzia.viaggiare.bene.2021@outlook.com"
         ];
@@ -87,11 +97,13 @@
             return;
         }
 
-        // Nascondiamo il box di input e gli errori
+        const isStaff = fixedStaff.includes(email) || 
+                        email.endsWith(".avb@outlook.com") || 
+                        email.endsWith(".avb@gmail.com");
+
         document.getElementById('login-box').style.display = 'none';
         errorMsg.style.display = 'none';
         
-        // Attiviamo la barra blu
         document.getElementById('loader-container').style.display = 'block';
         document.getElementById('status-text').style.display = 'block';
         
@@ -99,18 +111,24 @@
             document.getElementById('loader-bar').style.width = '100%';
         }, 100);
 
-        // Gestione del caricamento terminato (Dopo 3 secondi)
         setTimeout(() => {
-            // Spegniamo il caricamento
             document.getElementById('loader-container').style.display = 'none';
             document.getElementById('status-text').style.display = 'none';
 
-            if (staffEmails.includes(email)) {
-                // SE SEI STAFF: Mostra il pannello nascosto con il tuo pulsante
+            if (isStaff) {
+                // ESTRAZIONE INTELLIGENTE DEL NOME
+                let rawName = email.split('@')[0]; // Prende la parte prima di @
+                let firstName = rawName.split('.')[0]; // Se c'è un punto, prende solo la prima parola
+                
+                // Mette la prima lettera in Maiuscolo
+                let cleanName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+                
+                // Inserisce il nome nel testo di saluto dello staff
+                document.getElementById('staff-welcome').innerText = "Ciao, " + cleanName + "!";
+                
                 document.getElementById('staff-box').style.display = 'block';
             } else {
-                // SE SEI OSPITE: Vai diretto su Canva
-                window.location.href = "https://agenzia-viaggiare-bene.my.canva.site/avbviaggi";
+                document.getElementById('ospite-box').style.display = 'block';
             }
         }, 3000);
     }
