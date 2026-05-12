@@ -3,131 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portale Agenzia Viaggiare Bene</title>
     <style>
-        body { background-color: #000; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        body { background-color: #000; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
         center { width: 100%; max-width: 320px; padding: 20px; }
-        .logo-avb { width: 110px; height: auto; margin-bottom: 25px; display: block; margin-left: auto; margin-right: auto; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
+        .logo-avb { width: 110px; height: auto; margin-bottom: 25px; display: block; margin-left: auto; margin-right: auto; filter: drop-shadow(0 0 10px rgba(66, 133, 244, 0.3)); }
+        h1 { font-size: 22px; margin-bottom: 5px; font-weight: 600; }
+        .greeting-text { font-size: 20px; color: #4285F4; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .subtitle { color: #888; font-size: 14px; margin-bottom: 30px; }
         
-        .btn-social { background: white; color: #444; width: 280px; height: 50px; border-radius: 4px; margin-top: 15px; display: flex; align-items: center; justify-content: flex-start; cursor: pointer; font-weight: 600; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.3); font-size: 14px; padding: 0 15px; box-sizing: border-box; }
-        .btn-ms { background: #2f2f2f; color: white; border: 1px solid #444; }
-        .btn-other { background: #111; color: #eee; border: 1px solid #333; }
-        .btn-social svg, .icon-txt { width: 20px; height: 20px; margin-right: 15px; flex-shrink: 0; }
-        .btn-text { flex-grow: 1; text-align: center; padding-right: 20px; }
+        input[type="email"] { width: 100%; padding: 15px; margin-top: 20px; border-radius: 4px; border: 1px solid #333; background: #111; color: white; text-align: center; font-size: 16px; outline: none; box-sizing: border-box; }
+        .btn-submit, .btn-link { background: #4285F4; color: white; width: 100%; padding: 15px; border-radius: 4px; border: none; margin-top: 20px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3); text-decoration: none; display: block; box-sizing: border-box; }
+        .btn-submit:hover, .btn-link:hover { transform: scale(1.02); background: #357ae8; }
+
+        #loader-container { width: 100%; background: #222; height: 4px; border-radius: 2px; margin-top: 30px; display: none; overflow: hidden; }
+        #loader-bar { width: 0%; height: 100%; background: #4285F4; box-shadow: 0 0 10px #4285F4; transition: width 2.5s linear; }
+        #status-text { font-size: 12px; color: #4285F4; margin-top: 10px; display: none; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* Effetto Illuminazione Pulsanti */
-        .btn-social:hover, .btn-submit:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(66, 133, 244, 0.6); transition: 0.3s; }
-        .btn-social:active { transform: scale(0.95); }
+        #error-msg { color: #ff4d4d; font-size: 12px; margin-top: 10px; display: none; font-weight: bold; }
         
-        input[type="email"] { width: 280px; padding: 15px; margin-top: 20px; border-radius: 4px; border: 1px solid #333; background: #111; color: white; text-align: center; font-size: 16px; outline: none; box-sizing: border-box; }
-        .btn-submit { background: #4285F4; color: white; width: 280px; padding: 15px; border-radius: 4px; border: none; margin-top: 20px; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .back { color: #4285F4; font-size: 13px; margin-top: 20px; cursor: pointer; text-decoration: underline; }
-        #error-msg { color: #ff4d4d; font-size: 12px; margin-top: 10px; display: none; font-weight: bold; line-height: 1.4; }
+        #staff-box { display: none; margin-top: 20px; }
+        .staff-title { color: #ffcc00; font-size: 14px; font-weight: bold; letter-spacing: 2px; margin-bottom: 15px; }
     </style>
 </head>
-<body>
+<body onload="setGreeting()">
+
 <center>
     <img src="https://i.ibb.co/5Xd8CvF4/LOGO-ROUTER.png" class="logo-avb" alt="Logo AVB">
+    <div id="greeting" class="greeting-text">BENVENUTO</div>
     <h1>Agenzia Viaggiare Bene</h1>
     <p class="subtitle">Viaggiare Insieme, Viaggiare Bene.</p>
 
-    <div id="step1">
-        <button class="btn-social" onclick="showLogin('Google')">
-            <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-            <span class="btn-text">Accedi con Google</span>
-        </button>
-        <button class="btn-social btn-ms" onclick="showLogin('Microsoft')">
-            <svg viewBox="0 0 23 23"><path fill="#f35325" d="M0 0h11v11H0z"/><path fill="#81bc06" d="M12 0h11v11H12z"/><path fill="#05a6f0" d="M0 12h11v11H0z"/><path fill="#ffba08" d="M12 12h11v11H12z"/></svg>
-            <span class="btn-text">Accedi con Microsoft</span>
-        </button>
-        <button class="btn-social btn-other" onclick="showLogin('Altra Email')">
-            <span class="icon-txt">✉️</span>
-            <span class="btn-text">Usa un'altra email</span>
-        </button>
+    <!-- Box Principale di Accesso -->
+    <div id="login-box">
+        <input type="email" id="emailInput" placeholder="Inserisci la tua email" required>
+        <div id="error-msg"></div>
+        <button type="button" class="btn-submit" onclick="validateAndConnect()">CONNETTITI ORA</button>
     </div>
 
-    <div id="step2" style="display:none;">
-        <p id="txt" style="font-size:14px; color:#aaa; font-weight: bold;"></p>
-        
-        <!-- MODIFICATO PER MYPUBLICWIFI -->
-        <form id="wifiForm" method="POST" action="http://localhost/authenticate" onsubmit="return validateEmail()">
-<imput type="hidden" name="redir" value="https://agenzia-viaggiare-bene.my.canva.site/avbviaggi">
-            <input type="email" id="emailInput" name="email" placeholder="La tua email" required>
-            <div id="error-msg"></div>
-            <button type="submit" class="btn-submit">CONNETTITI ORA</button>
-        </form>
-        <div class="back" onclick="goBack()">Indietro</div>
+    <!-- Contenitore Animazione Barra Blu -->
+    <div id="loader-container"><div id="loader-bar"></div></div>
+    <p id="status-text">Verifica identità in corso...</p>
+
+    <!-- Box Segreto dello Staff (Appare solo a te) -->
+    <div id="staff-box">
+        <div class="staff-title">🔒 AREA STAFF AUTORIZZATA</div>
+        <p class="subtitle" style="margin-bottom: 15px;">Accesso eseguito come Amministratore.</p>
+        <!-- Puoi cambiare il link dentro le virgolette qui sotto quando vuoi -->
+        <a href="https://agenzia-viaggiare-bene.my.canva.site/area-staff" class="btn-link">APRI PANNELLO DI CONTROLLO</a>
     </div>
 </center>
 
 <script>
-    let currentProvider = '';
-    const googleDomain = '@gmail.com';
-    const msDomains = ['@outlook.it', '@outlook.com', '@hotmail.com', '@hotmail.it', '@live.it', '@msn.com'];
+    function setGreeting() {
+        const hour = new Date().getHours();
+        let greeting = "BENVENUTO";
 
-    function checkExpiration() {
-        const savedTime = localStorage.getItem('avb_login_time');
-        if (savedTime) {
-            const now = new Date().getTime();
-            const hoursPassed = (now - savedTime) / (1000 * 60 * 60);
-            if (hoursPassed > 24) { 
-                localStorage.removeItem('avb_email');
-                localStorage.removeItem('avb_login_time');
-            }
+        if (hour >= 6 && hour < 13) {
+            greeting = "☀️ BUONGIORNO";
+        } else if (hour >= 13 && hour < 17) {
+            greeting = "🌤️ BUON POMERIGGIO";
+        } else if (hour >= 17 && hour < 23) {
+            greeting = "🌙 BUONASERA";
+        } else {
+            greeting = "🌌 BUONANOTTE";
         }
+
+        document.getElementById('greeting').innerText = greeting;
     }
 
-    function showLogin(p){ 
-        checkExpiration(); 
-        currentProvider = p;
-        document.getElementById('step1').style.display='none'; 
-        document.getElementById('step2').style.display='block'; 
-        document.getElementById('txt').innerText = (p === 'Altra Email') ? 'Inserisci la tua email' : 'Accedi con account ' + p;
-        document.getElementById('error-msg').style.display = 'none';
-        
-        const savedEmail = localStorage.getItem('avb_email');
-        if (savedEmail) document.getElementById('emailInput').value = savedEmail;
-    }
-
-    function goBack(){ 
-        document.getElementById('step1').style.display='block'; 
-        document.getElementById('step2').style.display='none'; 
-    }
-
-    function validateEmail() {
-        const email = document.getElementById('emailInput').value.toLowerCase();
+    function validateAndConnect() {
+        const email = document.getElementById('emailInput').value.toLowerCase().trim();
         const errorMsg = document.getElementById('error-msg');
         
-        if (currentProvider === 'Google' && !email.endsWith(googleDomain)) {
-            errorMsg.innerText = "Usa il pulsante 'Altra Email' per indirizzi non Google.";
-            errorMsg.style.display = 'block'; return false;
-        } else if (currentProvider === 'Microsoft') {
-            const isValid = msDomains.some(domain => email.endsWith(domain));
-            if (!isValid) {
-                errorMsg.innerText = "Usa un account Microsoft valido.";
-                errorMsg.style.display = 'block'; return false;
-            }
-        } else if (currentProvider === 'Altra Email') {
-            const isGoogle = email.endsWith(googleDomain);
-            const isMS = msDomains.some(domain => email.endsWith(domain));
-            if (isGoogle || isMS) {
-                errorMsg.innerText = "Per account Google o Microsoft, usa i pulsanti dedicati.";
-                errorMsg.style.display = 'block'; return false;
-            }
+        const staffEmails = [
+            "agenzia.viaggiare.bene@gmail.com",
+            "agenzia.viaggiare.bene.2021@outlook.com"
+        ];
+
+        if (!email.includes('@') || !email.includes('.')) {
+            errorMsg.innerText = "Inserisci un indirizzo email valido.";
+            errorMsg.style.display = 'block';
+            return;
         }
 
-        localStorage.setItem('avb_email', email);
-        localStorage.setItem('avb_login_time', new Date().getTime());
+        // Nascondiamo il box di input e gli errori
+        document.getElementById('login-box').style.display = 'none';
+        errorMsg.style.display = 'none';
+        
+        // Attiviamo la barra blu
+        document.getElementById('loader-container').style.display = 'block';
+        document.getElementById('status-text').style.display = 'block';
+        
+        setTimeout(() => {
+            document.getElementById('loader-bar').style.width = '100%';
+        }, 100);
 
-        // INVIO A FORMSPREE
-        fetch("https://formspree.io/f/meenvdwo", {
-            method: "POST",
-            body: JSON.stringify({ email: email, provider: currentProvider }),
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-        });
+        // Gestione del caricamento terminato (Dopo 3 secondi)
+        setTimeout(() => {
+            // Spegniamo il caricamento
+            document.getElementById('loader-container').style.display = 'none';
+            document.getElementById('status-text').style.display = 'none';
 
-        return true; 
+            if (staffEmails.includes(email)) {
+                // SE SEI STAFF: Mostra il pannello nascosto con il tuo pulsante
+                document.getElementById('staff-box').style.display = 'block';
+            } else {
+                // SE SEI OSPITE: Vai diretto su Canva
+                window.location.href = "https://agenzia-viaggiare-bene.my.canva.site/avbviaggi";
+            }
+        }, 3000);
     }
 </script>
+
 </body>
 </html>
